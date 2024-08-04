@@ -86,6 +86,7 @@ def main(args):
             args.model_dir,
             gene_col=gene_col,
             batch_size=64,
+            device=device,
         )
 
     elif args.featurizer == 'pca':
