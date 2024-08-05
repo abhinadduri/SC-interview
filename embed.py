@@ -9,12 +9,9 @@ import scanpy as sc
 import scgpt as scg
 
 from pathlib import Path
-from scgpt.model import TransformerModel
-from scgpt.tokenizer.gene_tokenizer import GeneVocab
 from scgpt.utils import set_seed
-from scgpt.preprocess import Preprocessor
 
-parser = argparse.ArgumentParser(description="Use scGPT foundation model to embed gene expression")
+parser = argparse.ArgumentParser(description="Use different featurizers including the scGPT foundation model to embed gene expression")
 parser.add_argument("--model-dir", default="scgpt", dest="model_dir")
 parser.add_argument("-seed", type=int, default=42, dest="seed")
 parser.add_argument("--featurizer", default="scgpt", choices=["scgpt", "pca", "hvg"], dest="featurizer")
@@ -106,3 +103,4 @@ def main(args):
 if __name__ == '__main__':
     args = parser.parse_args()
     main(args)
+
