@@ -166,11 +166,15 @@ def main(args):
             plt.savefig(args.loss_plot)
 
     else:
+        scaler = StandardScaler()
+        X_train = scaler.fit_transform(X_train)
+        X_test = scaler.transform(X_test)
+
         if args.method == 'lr':
-            model = LogisticRegression(multi_class='ovr', max_iter=1000)
+            model = LogisticRegression(multi_class='ovr', max_iter=1000, class_weight='balanced', solver='sag', tol=1e-3, random_state=args.seed)
         else:
             assert args.method == 'rf'
-            model = RandomForestClassifier(random_state=args.seed) 
+            model = RandomForestClassifier(class_weight='balanced', random_state=args.seed) 
 
         model.fit(X_train, y_train)
 
@@ -198,4 +202,3 @@ def main(args):
 if __name__ == '__main__':
     args = parser.parse_args()
     main(args)
-

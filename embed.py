@@ -17,8 +17,9 @@ from scgpt.preprocess import Preprocessor
 parser = argparse.ArgumentParser(description="Use scGPT foundation model to embed gene expression")
 parser.add_argument("--model-dir", default="scgpt", dest="model_dir")
 parser.add_argument("-seed", type=int, default=42, dest="seed")
-parser.add_argument("--featurizer", default="scgpt", choices=["scgpt", "pca", "umap"], dest="featurizer")
+parser.add_argument("--featurizer", default="scgpt", choices=["scgpt", "pca", "hvg"], dest="featurizer")
 parser.add_argument("--num-pcs", type=int, default=25, dest="num_pcs")
+parser.add_argument("--num-hvgs", type=int, default=1800, dest="num_hvgs")
 parser.add_argument("--out-file", default="embeddings.h5ad", dest="out_file")
 
 def main(args):
@@ -93,6 +94,12 @@ def main(args):
         print("Computing the PCA for our genes...")
         sc.pp.pca(adata, n_comps=args.num_pcs)
         embed_adata = sc.AnnData(X=adata.obsm['X_pca'], dtype="float32")
+
+    elif args.featurizer == 'hvg':
+        print("Computing highly variable genes...")
+        sc.pp.highly_variable_genes(adata, n_top_genes=args.num_hvgs)
+        adata_hvg = adata[:, adata.var['highly_variable']]
+        embed_adata = sc.AnnData(X=adata_hvg.X, obs=adata_hvg.obs, var=adata_hvg.var)
 
     embed_adata.write_h5ad(args.out_file, compression='gzip')
 

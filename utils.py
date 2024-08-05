@@ -41,8 +41,8 @@ def plot_curves(methods, curve_type, title=None) -> None:
     
     for method in methods:
         if curve_type == 'roc':
-            fpr = np.load(plots_dir / f"{method}_{curve_type}_fpr.npy")
-            tpr = np.load(plots_dir / f"{method}_{curve_type}_tpr.npy")
+            fpr = np.load(plots_dir / f"{method}_{curve_type}_fpr.npy", allow_pickle=True)
+            tpr = np.load(plots_dir / f"{method}_{curve_type}_tpr.npy", allow_pickle=True)
             roc_auc = auc(fpr, tpr)
             plt.plot(fpr, tpr, label=f'{method} (AUC = {roc_auc:.3f})')
 
@@ -51,8 +51,8 @@ def plot_curves(methods, curve_type, title=None) -> None:
             plt.title('ROC Curve' if title is None else title)
             plt.legend(loc='lower right')
         elif curve_type == 'prc':
-            precision = np.load(plots_dir / f"{method}_{curve_type}_precision.npy")
-            recall = np.load(plots_dir / f"{method}_{curve_type}_recall.npy")
+            precision = np.load(plots_dir / f"{method}_{curve_type}_precision.npy", allow_pickle=True)
+            recall = np.load(plots_dir / f"{method}_{curve_type}_recall.npy", allow_pickle=True)
             pr_auc = auc(recall, precision)
             plt.plot(recall, precision, label=f'{method} (AUC = {pr_auc:.3f})')
 
